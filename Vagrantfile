@@ -43,7 +43,7 @@ Vagrant.configure("2") do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
+   config.vm.synced_folder "/Users/dev/desktop/IAC/IAC-Vagrant-deploy-wordpress", "/vagrant_data"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -81,7 +81,7 @@ Vagrant.configure("2") do |config|
                  php-zip -y
      sudo mkdir -p /srv/www
      sudo chown www-data: /srv/www
-     curl https://wordpress.org/latest.tar.gz | -u www-data tar zx -C /srv/www
+     curl https://wordpress.org/latest.tar.gz | sudo -u www-data tar zx -C /srv/www
      cp /vagrant/wordpress.conf /etc/apache2/sites-available/wordpress.conf
      sudo a2ensite wordpress
      sudo a2enmod rewrite
@@ -91,10 +91,9 @@ Vagrant.configure("2") do |config|
      mysql -u root -e 'create USER wordpress@localhost identified by "wpdeploy123";'
      mysql -u root -e 'grant SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,ALTER on wordpress.* to wordpress@localhost;'
      mysql -u root -e 'flush privileges;'
-     mysql -u root -e 'quit;'
      sudo -u www-data cp /srv/www/wordpress/wp-config-sample.php /srv/www/wordpress/wp-config.php
      sudo -u www-data sed -i 's/database_name_here/wordpress/' /srv/www/wordpress/wp-config.php
      sudo -u www-data sed -i 's/username_here/wordpress/' /srv/www/wordpress/wp-config.php
-     sudo -u www-data sed -i 's/password_here/<your-password>/' /srv/www/wordpress/wp-config.php 
+     sudo -u www-data sed -i 's/password_here/wpdeploy123/' /srv/www/wordpress/wp-config.php
    SHELL
 end
