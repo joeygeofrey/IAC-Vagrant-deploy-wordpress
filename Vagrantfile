@@ -64,9 +64,8 @@ Vagrant.configure("2") do |config|
   # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
   # documentation for more information about their specific syntax and use.
    config.vm.provision "shell", inline: <<-SHELL
-     sudo -i
-     apt update
-     apt install apache2 \
+     sudo apt update
+     sudo apt install apache2 \
                  ghostscript \
                  libapache2-mod-php \
                  mysql-server \
@@ -80,22 +79,22 @@ Vagrant.configure("2") do |config|
                  php-mysql \
                  php-xml \
                  php-zip -y
-     mkdir -p /srv/www
-     chown www-data: /srv/www
+     sudo mkdir -p /srv/www
+     sudo chown www-data: /srv/www
      curl https://wordpress.org/latest.tar.gz | -u www-data tar zx -C /srv/www
      cp /vagrant/wordpress.conf /etc/apache2/sites-available/wordpress.conf
-     a2ensite wordpress
-     a2enmod rewrite
-     a2dissite 000-default
-     systemctl restart apache2
+     sudo a2ensite wordpress
+     sudo a2enmod rewrite
+     sudo a2dissite 000-default
+     sudo systemctl restart apache2
      mysql -u root -e 'create DATABASE wordpress;' 
      mysql -u root -e 'create USER wordpress@localhost identified by "wpdeploy123";'
      mysql -u root -e 'grant SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,ALTER on wordpress.* to wordpress@localhost;'
      mysql -u root -e 'flush privileges;'
      mysql -u root -e 'quit;'
-     -u www-data cp /srv/www/wordpress/wp-config-sample.php /srv/www/wordpress/wp-config.php
-     -u www-data sed -i 's/database_name_here/wordpress/' /srv/www/wordpress/wp-config.php
-     -u www-data sed -i 's/username_here/wordpress/' /srv/www/wordpress/wp-config.php
-     -u www-data sed -i 's/password_here/<your-password>/' /srv/www/wordpress/wp-config.php 
+     sudo -u www-data cp /srv/www/wordpress/wp-config-sample.php /srv/www/wordpress/wp-config.php
+     sudo -u www-data sed -i 's/database_name_here/wordpress/' /srv/www/wordpress/wp-config.php
+     sudo -u www-data sed -i 's/username_here/wordpress/' /srv/www/wordpress/wp-config.php
+     sudo -u www-data sed -i 's/password_here/<your-password>/' /srv/www/wordpress/wp-config.php 
    SHELL
 end
